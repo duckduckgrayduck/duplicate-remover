@@ -1,38 +1,35 @@
 """
-This is a hello world add-on for DocumentCloud.
-
-It demonstrates how to write a add-on which can be activated from the
-DocumentCloud add-on system and run using Github Actions.  It receives data
-from DocumentCloud via the request dispatch and writes data back to
-DocumentCloud using the standard API
+DocumentCloud Add-On that removes duplicates by their hash value
 """
 
 from documentcloud.addon import AddOn
 
 
-class HelloWorld(AddOn):
+class DuplicateRemover(AddOn):
     """An example Add-On for DocumentCloud."""
 
     def main(self):
         """The main add-on functionality goes here."""
-        # fetch your add-on specific data
-        name = self.data.get("name", "world")
 
-        self.set_message("Hello World start!")
+        known_hashes = {}
+        to_delete = []
 
-        # add a hello note to the first page of each selected document
+        # Loop through all documents
         for document in self.get_documents():
-            # get_documents will iterate through all documents efficiently,
-            # either selected or by query, dependeing on which is passed in
-            document.annotations.create(f"Hello {name}!", 0)
-
-        with open("hello.txt", "w+") as file_:
-            file_.write("Hello world!")
-            self.upload_file(file_)
-
-        self.set_message("Hello World end!")
-        self.send_mail("Hello World!", "We finished!")
+            file_hash = document.file_hash
+            if file_hash in known_hashes:
+                # If file_hash is already known, add it to to_delete
+                to_delete.append({
+                    'deleted_id': document.id,
+                    'reason': f"Deleted because it has the same hash as {known_hashes[file_hash]}"
+                })
+            else:
+                # Otherwise, add file_hash and document id to known_hashes dictionary
+                known_hashes[file_hash] = document.id
+        # Print the list of deletions with reasons
+        for deletion in to_delete:
+            print(f"Deleted document {deletion['deleted_id']} - {deletion['reason']}")
 
 
 if __name__ == "__main__":
-    HelloWorld().main()
+    DuplicateRemover().main()
