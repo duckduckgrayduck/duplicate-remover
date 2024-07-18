@@ -27,6 +27,7 @@ class DuplicateRemover(AddOn):
                 # Otherwise, add file_hash and document id to known_hashes dictionary
                 known_hashes[file_hash] = document.id
         # Print the list of deletions with reasons
+        print(known_hashes)
         for deletion in to_delete:
             print(f"Deleted document {deletion['deleted_id']} - {deletion['reason']}")
 
