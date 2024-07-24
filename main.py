@@ -30,11 +30,11 @@ class DuplicateRemover(AddOn):
                             document.data["duplicate"] = "True"
                             document.data["hash"] = document.file_hash
                             document.save()
-                            clone = self.client.documents.get({known_hashes[file_hash]})
-                            """clone.data["duplicate"] = "True"
+                            print({known_hashes[file_hash]})
+                            """clone = self.client.documents.get({known_hashes[file_hash]})
+                            clone.data["duplicate"] = "True"
                             clone.data["hash"] = clone.file_hash
                             clone.save()"""
-                            print(clone)
                     to_delete.append({
                         'deleted_id': document.id,
                         'reason': f"Document has the same hash as document with id {known_hashes[file_hash]}"
