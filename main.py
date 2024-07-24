@@ -27,11 +27,11 @@ class DuplicateRemover(AddOn):
                         document.delete()
                     else:
                         if to_tag is True:
-                            document.data["duplicate"] = True
+                            document.data["duplicate"] = "True"
                             document.data["hash"] = document.file_hash
                             document.save()
                             clone = self.client.documents.get({known_hashes[file_hash]})
-                            clone.data["duplicate"] = True
+                            clone.data["duplicate"] = "True"
                             clone.data["hash"] = clone.file_hash
                             clone.save() 
                     to_delete.append({
