@@ -9,6 +9,9 @@ properties:
   confirm:
     title: Please check this box if you are sure you want to remove duplicate documents.
     type: boolean
+  to_tag:
+    title: Tag duplicate documents?
+    type: boolean
 categories: 
   - file
 version: 2

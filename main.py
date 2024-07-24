@@ -2,7 +2,6 @@
 DocumentCloud Add-On that removes duplicates by their hash value
 """
 import csv
-import sys
 from documentcloud.addon import AddOn
 from documentcloud.exceptions import APIError
 
@@ -13,8 +12,8 @@ class DuplicateRemover(AddOn):
         """The main add-on functionality goes here."""
         confirm = self.data.get("confirm", False)
         if confirm is False:
-            self.set_message("You did not check the confirmation box to run this Add-On")
-            sys.exit(0)
+            self.set_message("You did not check the confirmation box to delete duplicates, keeping all duplicate files.")
+        to_tag = self.data.get("to_tag", False)
         known_hashes = {}
         to_delete = []
 
@@ -24,10 +23,20 @@ class DuplicateRemover(AddOn):
             if file_hash in known_hashes:
                 # If file_hash is already known, add it to to_delete
                 try:
-                    document.delete()
+                    if confirm is True:
+                        document.delete()
+                    else:
+                        if to_tag is True:
+                            document.data["duplicate"] = True
+                            document.data["hash"] = document.file_hash
+                            document.save()
+                            clone = self.client.documents.get({known_hashes[file_hash]})
+                            clone.data["duplicate"] = True
+                            clone.data["hash"] = clone.file_hash
+                            clone.save() 
                     to_delete.append({
                         'deleted_id': document.id,
-                        'reason': f"Deleted because it has the same hash as document with id {known_hashes[file_hash]}"
+                        'reason': f"Document has the same hash as document with id {known_hashes[file_hash]}"
                     })
                 except APIError:
                     self.set_message(
