@@ -1,6 +1,6 @@
 title: Duplicate Remover
 description: Add-On that given a set of documents will check their hash values for uniqueness and remove duplicates. You must be the owner of the documents to delete them from DocumentCloud.
-instructions: ''
+instructions: 'Run this Add-On with tagging selected and deletion unchecked will tag the documents that are duplicates for you and tag them with their hash value, which you can sort along for manual review. If all of the duplicate documents are equivalent to you, you may opt to have them automatically removed by clicking the deletion checkbox. This option does not respect order- it merely deletes the first duplicate it happens to find.'
 type: object
 documents:
   - selected
