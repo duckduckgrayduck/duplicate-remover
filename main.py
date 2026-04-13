@@ -10,6 +10,7 @@ class DuplicateRemover(AddOn):
 
     def main(self):
         """The main add-on functionality goes here."""
+        self.client.session.headers.update({'User-Agent': 'Duplicate Remover Add-On'})
         confirm = self.data.get("confirm", False)
         if confirm is False:
             self.set_message("You did not check the confirmation box to delete duplicates, keeping all duplicate files.")
